@@ -1,0 +1,197 @@
+/* ===================================================
+   WATCH VIDEO PAGE
+=================================================== */
+
+.watch-container {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 28px;
+    padding: 30px;
+    align-items: flex-start;
+    color: #fff;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ===================================================
+   MAIN
+=================================================== */
+
+.watch-main{
+    width:100%;
+    min-width:0;
+}
+
+/* ===================================================
+   SIDEBAR
+=================================================== */
+
+.watch-sidebar{
+    position:sticky;
+    top:90px;
+
+    height:calc(100vh - 110px);
+
+    overflow-y:auto;
+
+    padding-right:6px;
+}
+
+.watch-sidebar::-webkit-scrollbar{
+    width:6px;
+}
+
+.watch-sidebar::-webkit-scrollbar-thumb{
+    background:#343434;
+    border-radius:20px;
+}
+
+.sidebar-title{
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+/* ===================================================
+   LOADING
+=================================================== */
+
+.loading-page{
+    min-height:70vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:28px;
+    font-weight:700;
+
+    color:#fff;
+}
+
+/* ===================================================
+   COMMON CARD
+=================================================== */
+
+.watch-card{
+    background:#171717;
+
+    border-radius:20px;
+
+    padding:24px;
+
+    margin-top:25px;
+
+    border:1px solid rgba(255,255,255,.05);
+}
+
+/* ===================================================
+   AI TAGS
+=================================================== */
+
+.ai-tags{
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+}
+
+.ai-tags span{
+
+    background:#143d38;
+
+    color:#84fff2;
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+}
+
+/* ===================================================
+   SECTION TITLE
+=================================================== */
+
+.section-title{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+}
+
+/* ===================================================
+   RESPONSIVE
+=================================================== */
+
+@media(max-width:1200px){
+
+.watch-container{
+
+    grid-template-columns:1fr;
+
+}
+
+.watch-sidebar{
+
+    position:static;
+
+    height:auto;
+
+    overflow:visible;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.watch-container{
+
+    padding:18px;
+
+}
+
+.sidebar-title{
+
+    margin-top:30px;
+
+}
+
+.watch-card{
+
+    padding:18px;
+
+}
+
+}
+
+@media(max-width:500px){
+
+.watch-container{
+
+    padding:12px;
+
+}
+
+.sidebar-title{
+
+    font-size:20px;
+
+}
+
+.section-title{
+
+    font-size:20px;
+
+}
+
+}

@@ -1,0 +1,35 @@
+.description-card{
+
+    margin-top:28px;
+
+    background:#181818;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+.description-card h2{
+
+    font-size:22px;
+
+    color:white;
+
+    margin-bottom:18px;
+
+}
+
+.description-card p{
+
+    color:#d1d5db;
+
+    font-size:15px;
+
+    line-height:1.9;
+
+    white-space:pre-wrap;
+
+}

@@ -1,0 +1,68 @@
+.dashboard{
+
+display:flex;
+
+min-height:100vh;
+
+background:#050816;
+
+}
+
+.dashboard-main{
+
+flex:1;
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.dashboard-content{
+
+padding:35px;
+
+flex:1;
+
+overflow:auto;
+
+}
+
+/* Fixed navbar/sidebars adjustments */
+.dashboard-main{
+	transition:margin-left .3s ease;
+}
+
+.dashboard .sidebar:not(.collapsed) ~ .dashboard-main,
+.dashboard-layout .sidebar:not(.collapsed) ~ .main-content{
+	margin-left:270px;
+}
+
+.dashboard .sidebar.collapsed ~ .dashboard-main,
+.dashboard-layout .sidebar.collapsed ~ .main-content{
+	margin-left:72px;
+}
+
+/* ensure content not hidden by fixed navbar */
+.dashboard-main .dashboard-content{
+	padding-top: 80px;
+}
+
+@media (max-width:768px){
+	.dashboard .sidebar,
+	.dashboard .sidebar.open{
+		transform:none;
+	}
+
+	.dashboard .sidebar ~ .dashboard-main{
+		margin-left:0;
+	}
+
+	.dashboard-layout .sidebar ~ .main-content{
+		margin-left:0;
+	}
+
+	.dashboard-main .dashboard-content{
+		padding-top: 80px;
+	}
+}

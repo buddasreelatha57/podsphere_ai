@@ -1,0 +1,80 @@
+services:
+
+  # ─────────────────────────────────────────
+  # Ollama — Local LLM (replaces Gemini)
+  # ─────────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: podsphere_ollama
+    volumes:
+      - ollama_data:/root/.ollama   # persist downloaded models
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    # Pull the model on first start
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama serve &
+        sleep 5
+        ollama pull llama3.2:3b
+        wait
+
+  # ─────────────────────────────────────────
+  # Whisper — Audio Transcription
+  # ─────────────────────────────────────────
+  whisper:
+    image: python:3.11-slim
+    container_name: podsphere_whisper
+    working_dir: /app
+    volumes:
+      - ./backend/src/python:/app
+      - ./uploads:/uploads
+    ports:
+      - "9000:9000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      bash -c "pip install faster-whisper flask --quiet &&
+               python whisper_server.py"
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────
+  # Backend — Node.js API
+  # ─────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: podsphere_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - WHISPER_URL=http://whisper:9000
+      - NODE_ENV=production
+    volumes:
+      - ./uploads:/uploads
+    depends_on:
+      - ollama
+      - whisper
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────
+  # Frontend — React/Vite
+  # ─────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: podsphere_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  ollama_data:

@@ -1,0 +1,436 @@
+/* ===========================================
+   PODCAST PAGE
+=========================================== */
+
+.podcast-page{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    gap:30px;
+    padding:30px;
+    color:#fff;
+}
+
+.podcast-main{
+    min-width:0;
+}
+
+.podcast-sidebar{
+    position:sticky;
+    top:90px;
+    height:calc(100vh - 110px);
+    overflow-y:auto;
+    padding-right:6px;
+}
+
+.podcast-sidebar::-webkit-scrollbar{
+    width:6px;
+}
+
+.podcast-sidebar::-webkit-scrollbar-thumb{
+    background:#333;
+    border-radius:20px;
+}
+
+.podcast-sidebar h2{
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+/* ===========================================
+   PLAYER CARD
+=========================================== */
+
+.podcast-player{
+
+    background:linear-gradient(
+        180deg,
+        #202020,
+        #111111
+    );
+
+    border-radius:24px;
+
+    padding:45px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.35);
+
+}
+
+.album-cover{
+
+    width:320px;
+
+    height:320px;
+
+    border-radius:24px;
+
+    object-fit:cover;
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.45);
+
+    transition:.35s;
+
+}
+
+.album-cover:hover{
+
+    transform:scale(1.03);
+
+}
+
+.podcast-title{
+
+    margin-top:30px;
+
+    font-size:32px;
+
+    font-weight:700;
+
+    text-align:center;
+
+}
+
+.creator-name{
+
+    margin-top:8px;
+
+    color:#bdbdbd;
+
+    font-size:16px;
+
+}
+
+/* ===========================================
+   PROGRESS
+=========================================== */
+
+.progress-wrapper{
+
+    width:100%;
+
+    margin-top:40px;
+
+}
+
+.progress-slider{
+
+    width:100%;
+
+    accent-color:#10b981;
+
+    cursor:pointer;
+
+}
+
+.progress-time{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:10px;
+
+    color:#9ca3af;
+
+    font-size:14px;
+
+}
+
+/* ===========================================
+   CONTROLS
+=========================================== */
+
+.player-controls{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:28px;
+
+    margin-top:35px;
+
+}
+
+.player-controls button{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.player-controls button:hover{
+
+    color:#10b981;
+
+    transform:scale(1.15);
+
+}
+
+.play-btn{
+
+    width:72px;
+
+    height:72px;
+
+    border-radius:50%;
+
+    background:#10b981 !important;
+
+    color:black !important;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+/* ===========================================
+   VOLUME
+=========================================== */
+
+.volume-row{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin-top:35px;
+
+}
+
+.volume-row input{
+
+    flex:1;
+
+    accent-color:#10b981;
+
+}
+
+.volume-row select{
+
+    background:#222;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 16px;
+
+    border-radius:10px;
+
+}
+
+/* ===========================================
+   ACTIONS
+=========================================== */
+
+.podcast-actions{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    margin-top:40px;
+
+}
+
+.podcast-actions button{
+
+    background:#1f1f1f;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:999px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    transition:.3s;
+
+}
+
+.podcast-actions button:hover{
+
+    background:#10b981;
+
+    transform:translateY(-2px);
+
+}
+
+
+.queue-card{
+
+    margin-top:35px;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    background:#181818;
+
+    text-align:center;
+
+}
+
+.queue-card h3{
+
+    margin-bottom:12px;
+
+}
+
+.queue-card p{
+
+    color:#9ca3af;
+
+}
+
+/* ===========================================
+   RESPONSIVE
+=========================================== */
+
+@media(max-width:1100px){
+
+.podcast-page{
+
+    grid-template-columns:1fr;
+
+}
+
+.podcast-sidebar{
+
+    position:static;
+
+    height:auto;
+
+    overflow:visible;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.podcast-page{
+
+    padding:20px;
+
+}
+
+.podcast-player{
+
+    padding:25px;
+
+}
+
+.album-cover{
+
+    width:240px;
+
+    height:240px;
+
+}
+
+.podcast-title{
+
+    font-size:26px;
+
+}
+
+.player-controls{
+
+    gap:18px;
+
+}
+
+.play-btn{
+
+    width:60px;
+
+    height:60px;
+
+}
+
+}
+
+@media(max-width:500px){
+
+.album-cover{
+
+    width:190px;
+
+    height:190px;
+
+}
+
+.podcast-title{
+
+    font-size:22px;
+
+}
+
+.volume-row{
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+}
+
+.volume-row select{
+
+    width:100%;
+
+}
+
+.podcast-actions{
+
+    flex-direction:column;
+
+}
+
+.podcast-actions button{
+
+    width:100%;
+
+    justify-content:center;
+
+}
+
+}

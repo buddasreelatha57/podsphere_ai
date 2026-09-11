@@ -1,0 +1,268 @@
+.sidebar{
+    width:270px;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+
+    display:flex;
+    flex-direction:column;
+
+    /* clearer / semi-transparent look */
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(12px);
+
+    border-right:1px solid rgba(255,255,255,0.04);
+
+    padding:24px 18px;
+
+    transition:all .3s ease;
+
+    z-index:150;
+}
+
+.sidebar-logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    color:#fff;
+
+    font-size:22px;
+    font-weight:700;
+
+    margin-bottom:22px;
+}
+
+.sidebar-logo img{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+}
+
+/* inline toggle placed after logo text */
+.sidebar-logo{
+    position:relative;
+}
+
+.logo-toggle{
+    margin-left:auto;
+    width:36px;
+    height:36px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+}
+
+/* when collapsed, keep toggle visible at the right edge */
+.sidebar.collapsed .sidebar-logo{
+    justify-content:space-between;
+    width:100%;
+}
+
+.sidebar-menu{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    flex:1;
+}
+
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding:14px 18px;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    color:#CBD5E1;
+
+    transition:all .25s ease;
+}
+
+.menu-item:hover{
+    background:rgba(15,179,160,.15);
+    color:#0fb3a0;
+}
+
+.menu-item.active{
+    background:#0fb3a0;
+    color:white;
+}
+
+.sidebar > div{
+    /* make the main wrapper take available height so logout can sit at bottom */
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.logout-btn{
+    margin-top: auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+
+    gap:10px;
+
+    padding:12px 16px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#ef4444;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+    width:100%;
+}
+
+.logout-btn:hover{
+    background:#dc2626;
+}
+
+/* when collapsed, center the logout icon */
+.sidebar.collapsed .logout-btn{
+    justify-content:center;
+}
+
+/* =======================
+   Tablet
+======================= */
+
+@media (max-width:1024px){
+
+.sidebar{
+
+    width:85px;
+
+    padding:20px 10px;
+
+}
+
+.sidebar-logo{
+
+    justify-content:center;
+
+}
+
+.sidebar-logo span{
+
+    display:none;
+
+}
+
+.menu-item{
+
+    justify-content:center;
+
+    padding:14px;
+
+}
+
+.menu-item span{
+
+    display:none;
+
+}
+
+.logout-btn{
+
+    padding:14px;
+
+}
+
+.logout-btn span{
+
+    display:none;
+
+}
+
+}
+
+/* =======================
+   Mobile
+======================= */
+
+@media (max-width:768px){
+
+.sidebar{
+
+    /* keep mobile behavior (overlay) */
+    position:fixed;
+    left:0;
+    top:0;
+    width:260px;
+    transform:translateX(-100%);
+    transition:transform .3s ease;
+    box-shadow:0 0 40px rgba(0,0,0,.45);
+
+}
+
+.sidebar.open{
+
+    transform:translateX(0);
+
+}
+
+.sidebar-logo span{
+
+    display:block;
+
+}
+
+.menu-item{
+
+    justify-content:flex-start;
+
+}
+
+.menu-item span{
+
+    display:block;
+
+}
+
+.logout-btn span{
+
+    display:block;
+
+}
+
+}
+
+/* Collapsed state for desktop */
+.sidebar.collapsed{
+    width:72px;
+    padding:18px 10px;
+}
+
+.sidebar.collapsed .sidebar-logo span,
+.sidebar.collapsed .menu-item span,
+.sidebar.collapsed .logout-btn span{
+    display:none;
+}
+
+.sidebar.collapsed .sidebar-logo{
+    justify-content:center;
+}
+
+/* make menu items center when collapsed */
+.sidebar.collapsed .menu-item{
+    justify-content:center;
+}

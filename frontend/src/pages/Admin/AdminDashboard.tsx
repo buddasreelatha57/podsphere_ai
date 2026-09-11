@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import { 
   Users, Activity, LineChart as LineChartIcon, Smartphone, Globe, 
   Target, UserMinus, ShieldAlert, DollarSign, FileText, Server, 
@@ -36,16 +37,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchFullStats = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/admin/analytics/full", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.message || "Failed to fetch analytics");
-        setData(json.data);
+        const res = await api.get("/admin/analytics/full");
+        setData(res.data.data);
       } catch (err: any) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "Failed to fetch analytics");
       } finally {
         setLoading(false);
       }

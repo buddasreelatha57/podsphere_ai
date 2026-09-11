@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -12,17 +13,8 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
+      const response = await api.post("/auth/login", { email, password });
+      const data = response.data;
 
       if (data.user.role !== "admin") {
         throw new Error("Access denied. Admin privileges required.");
@@ -33,7 +25,7 @@ export default function AdminLogin() {
 
       navigate("/admin/dashboard");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Login failed");
     }
   };
 

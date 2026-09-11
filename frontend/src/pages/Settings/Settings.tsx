@@ -3,6 +3,7 @@ import { User, Shield, Lock, Eye, Monitor, Save, Camera } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { updateProfile, updateProfileImages } from "../../services/user.service";
+import api from "../../services/api";
 import "./Settings.css";
 
 interface UserProfile {
@@ -57,62 +58,51 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("user") || localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        if (JSON.parse(storedUser)?.role === "guest") {
-          navigate("/dashboard", { replace: true });
-          return;
-        }
-      } catch {
-        // Ignore malformed cached user data and let the API decide.
-      }
+    const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
     }
     fetchUserData();
   }, [navigate]);
 
   const fetchUserData = async () => {
     try {
-      const token = sessionStorage.getItem("token") || localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/users/profile/me", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
+      const res = await api.get("/users/profile/me");
+      const data = res.data;
       
-      if (res.ok) {
-        if (data.profile?.role === "guest") {
-          navigate("/dashboard", { replace: true });
-          return;
-        }
-        setProfile({
-          name: data.profile.name || "",
-          email: data.profile.email || "",
-          bio: data.profile.bio || "",
-          avatar: data.profile.avatar || "",
-          banner: data.profile.banner || "",
+      if (data.profile?.role === "guest") {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+      setProfile({
+        name: data.profile.name || "",
+        email: data.profile.email || "",
+        bio: data.profile.bio || "",
+        avatar: data.profile.avatar || "",
+        banner: data.profile.banner || "",
+      });
+      setAvatarPreview(data.profile.avatar || "");
+      setBannerPreview(data.profile.banner || "");
+      
+      if (data.profile.settings) {
+        setSettings({
+          theme: data.profile.settings.theme || "dark",
+          playbackQuality: data.profile.settings.playbackQuality || "auto",
+          notifications: data.profile.settings.notifications ?? true,
+          privacy: {
+            isProfilePublic: data.profile.settings.privacy?.isProfilePublic ?? true,
+            showFollowers: data.profile.settings.privacy?.showFollowers ?? true,
+          },
+          restrictions: {
+            childSafetyMode: data.profile.settings.restrictions?.childSafetyMode ?? false,
+            childRestrictions: data.profile.settings.restrictions?.childRestrictions ?? false,
+          }
         });
-        setAvatarPreview(data.profile.avatar || "");
-        setBannerPreview(data.profile.banner || "");
-        
-        // If the user's DB doesn't have the new settings yet, merge defaults
-        if (data.profile.settings) {
-          setSettings({
-            theme: data.profile.settings.theme || "dark",
-            playbackQuality: data.profile.settings.playbackQuality || "auto",
-            notifications: data.profile.settings.notifications ?? true,
-            privacy: {
-              isProfilePublic: data.profile.settings.privacy?.isProfilePublic ?? true,
-              showFollowers: data.profile.settings.privacy?.showFollowers ?? true,
-            },
-            restrictions: {
-              childSafetyMode: data.profile.settings.restrictions?.childSafetyMode ?? false,
-              childRestrictions: data.profile.settings.restrictions?.childRestrictions ?? false,
-            }
-          });
-        }
       }
     } catch (err) {
-      toast.error("Failed to load settings.");
+      console.error(err);
+      toast.error("Failed to load settings data.");
     } finally {
       setLoading(false);
     }
@@ -122,40 +112,30 @@ export default function Settings() {
     e.preventDefault();
     setSaving(true);
     try {
-      let updatedUser: UserProfile;
-
       if (avatarFile || bannerFile) {
         const formData = new FormData();
-        formData.append("name", profile.name);
-        formData.append("bio", profile.bio);
         if (avatarFile) formData.append("avatar", avatarFile);
         if (bannerFile) formData.append("banner", bannerFile);
-
-        const response = await updateProfileImages(formData);
-        updatedUser = response.user;
-      } else {
-        const response = await updateProfile(profile);
-        updatedUser = response.user;
+        await updateProfileImages(formData);
       }
 
-      setProfile((currentProfile) => ({ ...currentProfile, ...updatedUser }));
-      setAvatarFile(null);
-      setBannerFile(null);
-      setAvatarPreview(updatedUser.avatar || "");
-      setBannerPreview(updatedUser.banner || "");
-      toast.success("Profile updated successfully!");
+      const res = await updateProfile({
+        name: profile.name,
+        bio: profile.bio
+      });
 
-      const localUser = JSON.parse(
-        sessionStorage.getItem("user") || localStorage.getItem("user") || "{}"
-      );
-      const updatedLocalUser = { ...localUser, ...updatedUser };
-      if (sessionStorage.getItem("user")) {
-        sessionStorage.setItem("user", JSON.stringify(updatedLocalUser));
-      } else {
-        localStorage.setItem("user", JSON.stringify(updatedLocalUser));
+      if (res.data?.success || res.success || res) {
+        toast.success("Profile updated successfully!");
+        const localUser = JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "{}");
+        const updatedLocalUser = { ...localUser, name: profile.name, bio: profile.bio };
+        if (sessionStorage.getItem("user")) {
+          sessionStorage.setItem("user", JSON.stringify(updatedLocalUser));
+        } else {
+          localStorage.setItem("user", JSON.stringify(updatedLocalUser));
+        }
       }
-    } catch (err) {
-      toast.error("Network error.");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to update profile.");
     } finally {
       setSaving(false);
     }
@@ -165,31 +145,17 @@ export default function Settings() {
     e.preventDefault();
     setSaving(true);
     try {
-      const token = sessionStorage.getItem("token") || localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/users/settings", {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ settings })
-      });
-      if (res.ok) {
-        toast.success("Settings saved successfully!");
-        document.documentElement.setAttribute("data-theme", settings.theme);
-        
-        // Update local user object
-        try {
-          const localUser = JSON.parse(localStorage.getItem("user") || "{}");
-          localUser.settings = { ...(localUser.settings || {}), ...settings };
-          localStorage.setItem("user", JSON.stringify(localUser));
-        } catch(e) {}
-      } else {
-        const err = await res.json();
-        toast.error(err.message || "Failed to update settings.");
-      }
-    } catch (err) {
-      toast.error("Network error.");
+      await api.put("/users/settings", { settings });
+      toast.success("Settings saved successfully!");
+      document.documentElement.setAttribute("data-theme", settings.theme);
+      
+      try {
+        const localUser = JSON.parse(localStorage.getItem("user") || "{}");
+        localUser.settings = { ...(localUser.settings || {}), ...settings };
+        localStorage.setItem("user", JSON.stringify(localUser));
+      } catch(e) {}
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to update settings.");
     } finally {
       setSaving(false);
     }
@@ -203,27 +169,14 @@ export default function Settings() {
     
     setSaving(true);
     try {
-      const token = sessionStorage.getItem("token") || localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/users/password", {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({
-          currentPassword: passwords.currentPassword,
-          newPassword: passwords.newPassword
-        })
+      await api.put("/users/password", {
+        currentPassword: passwords.currentPassword,
+        newPassword: passwords.newPassword
       });
-      if (res.ok) {
-        toast.success("Password updated successfully!");
-        setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      } else {
-        const err = await res.json();
-        toast.error(err.message || "Failed to update password.");
-      }
-    } catch (err) {
-      toast.error("Network error.");
+      toast.success("Password updated successfully!");
+      setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to update password.");
     } finally {
       setSaving(false);
     }

@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 
 import cloudinary, { getActiveCloudinaryConfig } from "../config/cloudinary";
 import Content from "../models/Content";
-import User from "../models/User";
 import Notification from "../models/Notification";
 
 import { extractAudio, compressVideo } from "../utils/ffmpeg";
@@ -30,21 +29,19 @@ const uploadToCloudinary = async (
 
     const stream = cloudinary.uploader.upload_stream(
       {
-        ...activeConfig,
         folder,
         resource_type: resourceType,
-        timeout: 600000, // 10 minutes timeout for large videos
-        chunk_size: 6000000 // 6MB chunks for large files
+        api_key: activeConfig?.api_key,
+        api_secret: activeConfig?.api_secret,
+        cloud_name: activeConfig?.cloud_name,
       },
       (error, result) => {
-
-        if (error) return reject(error);
-
-        if (!result)
-          return reject(new Error("Upload Failed"));
-
-        resolve(result);
-
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
       }
     );
 
@@ -56,7 +53,7 @@ const uploadToCloudinary = async (
 
 };
 
-export const validateObjectId = (id: string) => mongoose.isValidObjectId(id);
+export const validateObjectId = (id: any): boolean => mongoose.isValidObjectId(id);
 
 const processAIInBackground = async (
   contentId: string,
@@ -66,7 +63,7 @@ const processAIInBackground = async (
   category: string,
   publishPodcast: boolean,
   publishArticle: boolean,
-  finalStatus: string
+  finalStatus: "processing" | "published" | "draft" | "failed" | string
 ) => {
   try {
     const content = await Content.findById(contentId);
@@ -122,7 +119,7 @@ const processAIInBackground = async (
       content.podcastAudio = podcastUrl;
     }
     
-    content.status = finalStatus || "published";
+    content.status = (finalStatus as any) || "published";
     await content.save();
     console.log(`[AI] Processing completed for content ${contentId} with status ${content.status}`);
   } catch (error) {

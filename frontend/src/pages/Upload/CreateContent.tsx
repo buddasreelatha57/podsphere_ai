@@ -7,7 +7,6 @@ import Navbar from "../../components/dashboard/Navbar";
 
 import UploadBox from "./UploadBox";
 import ContentDetails from "./ContentDetails";
-import AIOptions from "./AIOptions";
 import PublishOptions from "./PublishOptions";
 
 import { uploadContent } from "../../services/content.service";
@@ -45,12 +44,12 @@ export default function CreateContent() {
   // AI Options
   // ==========================
 
-  const [transcript, setTranscript] = useState(true);
-  const [summary, setSummary] = useState(true);
-  const [chapters, setChapters] = useState(true);
-  const [translation, setTranslation] = useState(false);
-  const [seo, setSeo] = useState(true);
-  const [aiVoice, setAiVoice] = useState(false);
+  const [transcript, _setTranscript] = useState(true);
+  const [summary, _setSummary] = useState(true);
+  const [chapters, _setChapters] = useState(true);
+  const [translation, _setTranslation] = useState(false);
+  const [seo, _setSeo] = useState(true);
+  const [aiVoice, _setAiVoice] = useState(false);
 
   // ==========================
   // Page State

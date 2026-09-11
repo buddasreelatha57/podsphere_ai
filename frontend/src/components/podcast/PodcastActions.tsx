@@ -26,9 +26,9 @@ export default function PodcastActions({
 
   bookmarked,
 
-  bookmarks,
+  bookmarks: _bookmarks,
 
-  shares,
+  shares: _shares,
 
   onBookmark,
 

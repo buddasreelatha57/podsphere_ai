@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
@@ -8,7 +8,6 @@ import api from "../../services/api";
 import RelatedPodcastCard from "../../components/dashboard/RelatedPodcastCard";
 
 import PodcastPlayer from "../../components/podcast/PodcastPlayer";
-import PodcastControls from "../../components/podcast/PodcastControls";
 import PodcastActions from "../../components/podcast/PodcastActions";
 import ShareModal from "../../components/common/ShareModal";
 
@@ -80,6 +79,8 @@ export default function WatchPodcastPage() {
 
   const handleBookmark=async()=>{
 
+    if (!podcast) return;
+
     try{
 
         const res=await api.post(
@@ -88,15 +89,9 @@ export default function WatchPodcastPage() {
 
         );
 
-        setPodcast({
-
-            ...podcast,
-
-            bookmarks:res.data.bookmarks,
-
-            bookmarked:res.data.bookmarked,
-
-        });
+        setPodcast((prev) =>
+          prev ? { ...prev, bookmarks: res.data.bookmarks, bookmarked: res.data.bookmarked } : prev
+        );
 
     }
 
@@ -109,15 +104,15 @@ export default function WatchPodcastPage() {
 };
 
 const handleShare=async()=>{
+    if (!podcast) return;
     setIsShareModalOpen(true);
     try{
         const res=await api.post(
             `/content/${podcast._id}/share`
         );
-        setPodcast({
-            ...podcast,
-            shares:res.data.shares,
-        });
+        setPodcast((prev) =>
+          prev ? { ...prev, shares: res.data.shares } : prev
+        );
     }
     catch(err){
         console.log(err);
@@ -125,6 +120,8 @@ const handleShare=async()=>{
 };
 
 const handleDownload=()=>{
+
+    if (!podcast) return;
 
     const link=document.createElement("a");
 

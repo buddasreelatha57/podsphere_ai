@@ -181,7 +181,7 @@ export default function VideoPlayer({
 
   // Hide controls after 3s of inactivity
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
     const resetTimer = () => {
       setShowControls(true);
       clearTimeout(timeout);

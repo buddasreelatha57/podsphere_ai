@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   Users, Activity, LineChart as LineChartIcon, Smartphone, Globe, 
@@ -6,8 +6,8 @@ import {
   LogOut, ChevronRight
 } from "lucide-react";
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
-  PieChart, Pie, Cell, BarChart, Bar 
+  Tooltip, Legend, ResponsiveContainer, 
+  PieChart, Pie, Cell 
 } from 'recharts';
 import "./AdminDashboard.css";
 

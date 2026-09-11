@@ -312,7 +312,7 @@ export default function WatchVideoPage() {
     );
   }
 
-  const loadedVideo = video;
+  const loadedVideo = video as Content;
 
   return (
     <DashboardLayout>

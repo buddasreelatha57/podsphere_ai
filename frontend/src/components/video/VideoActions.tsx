@@ -28,8 +28,8 @@ interface Props {
 export default function VideoActions({
   likes,
   dislikes,
-  bookmarks,
-  shares,
+  bookmarks: _bookmarks,
+  shares: _shares,
   liked,
   disliked,
   bookmarked,

@@ -312,6 +312,8 @@ export default function WatchVideoPage() {
     );
   }
 
+  const loadedVideo = video;
+
   return (
     <DashboardLayout>
       <div className="watch-container">
@@ -328,17 +330,17 @@ export default function WatchVideoPage() {
             </button>
             <button
               className={`secondary-btn ${activeFormat === "podcast" ? "active" : ""}`}
-              onClick={() => { if (video.podcastAudio) setActiveFormat("podcast") }}
-              style={{ background: activeFormat === "podcast" ? "#0fb3a0" : "transparent", borderColor: activeFormat === "podcast" ? "#0fb3a0" : "rgba(255,255,255,.06)", opacity: activeFormat === "podcast" ? 1 : (video.podcastAudio ? 0.7 : 0.3), cursor: video.podcastAudio ? 'pointer' : 'not-allowed' }}
-              title={!video.podcastAudio ? "Podcast not generated yet" : ""}
+              onClick={() => { if (loadedVideo.podcastAudio) setActiveFormat("podcast") }}
+              style={{ background: activeFormat === "podcast" ? "#0fb3a0" : "transparent", borderColor: activeFormat === "podcast" ? "#0fb3a0" : "rgba(255,255,255,.06)", opacity: activeFormat === "podcast" ? 1 : (loadedVideo.podcastAudio ? 0.7 : 0.3), cursor: loadedVideo.podcastAudio ? 'pointer' : 'not-allowed' }}
+              title={!loadedVideo.podcastAudio ? "Podcast not generated yet" : ""}
             >
               🎧 Podcast
             </button>
             <button
               className={`secondary-btn ${activeFormat === "article" ? "active" : ""}`}
-              onClick={() => { if (video.article) setActiveFormat("article") }}
-              style={{ background: activeFormat === "article" ? "#0fb3a0" : "transparent", borderColor: activeFormat === "article" ? "#0fb3a0" : "rgba(255,255,255,.06)", opacity: activeFormat === "article" ? 1 : (video.article ? 0.7 : 0.3), cursor: video.article ? 'pointer' : 'not-allowed' }}
-              title={!video.article ? "Article not generated yet" : ""}
+              onClick={() => { if (loadedVideo.article) setActiveFormat("article") }}
+              style={{ background: activeFormat === "article" ? "#0fb3a0" : "transparent", borderColor: activeFormat === "article" ? "#0fb3a0" : "rgba(255,255,255,.06)", opacity: activeFormat === "article" ? 1 : (loadedVideo.article ? 0.7 : 0.3), cursor: loadedVideo.article ? 'pointer' : 'not-allowed' }}
+              title={!loadedVideo.article ? "Article not generated yet" : ""}
             >
               📖 Article
             </button>
@@ -347,13 +349,13 @@ export default function WatchVideoPage() {
           {activeFormat === "video" && (
             <div style={{ marginTop: '30px' }}>
               <VideoPlayer
-                title={video.title}
-                thumbnail={video.thumbnail}
-                video={video.originalVideo}
+                title={loadedVideo.title}
+                thumbnail={loadedVideo.thumbnail}
+                video={loadedVideo.originalVideo}
                 hashtags={extractedHashtags}
-                summary={video.summary}
-                article={video.article}
-                transcript={video.transcript}
+                summary={loadedVideo.summary}
+                article={loadedVideo.article}
+                transcript={loadedVideo.transcript}
                 onValidView={handleValidView}
               />
             </div>
@@ -361,25 +363,25 @@ export default function WatchVideoPage() {
 
           {activeFormat === "podcast" && (
             <PodcastPlayer
-              title={video.title}
-              creator={video.creator.name}
-              thumbnail={video.thumbnail}
-              audio={video.podcastAudio || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"}
+              title={loadedVideo.title}
+              creator={loadedVideo.creator.name}
+              thumbnail={loadedVideo.thumbnail}
+              audio={loadedVideo.podcastAudio || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"}
               onValidView={handleValidView}
             />
           )}
 
           {activeFormat === "article" && (
             <div className="article-view" style={{ padding: '20px', background: '#1e293b', borderRadius: '10px', lineHeight: 1.6, color: '#f8fafc' }}>
-              <h1 style={{ marginBottom: '20px' }}>{video.title}</h1>
+              <h1 style={{ marginBottom: '20px' }}>{loadedVideo.title}</h1>
               <div style={{ whiteSpace: 'pre-wrap' }}>
-                {video.article || (
+                {loadedVideo.article || (
                   <div>
                     <p style={{ fontStyle: "italic", color: "#94a3b8", marginBottom: "1rem" }}>
                       This is a preview of the AI-generated article. The original uploader did not generate an article for this content.
                     </p>
                     <h2>Introduction</h2>
-                    <p>Welcome to this exciting content piece. Here we explore fascinating topics related to <strong>{video.category || "technology"}</strong> and modern trends.</p>
+                    <p>Welcome to this exciting content piece. Here we explore fascinating topics related to <strong>{loadedVideo.category || "technology"}</strong> and modern trends.</p>
                     <h2>Key Takeaways</h2>
                     <ul>
                       <li>Insightful discussion on the main theme.</li>
@@ -395,21 +397,21 @@ export default function WatchVideoPage() {
           )}
 
           <CreatorCard
-            creator={video.creator}
-            views={video.views}
-            createdAt={video.createdAt}
-            isFollowing={video.isFollowing}
+            creator={loadedVideo.creator}
+            views={loadedVideo.views}
+            createdAt={loadedVideo.createdAt}
+            isFollowing={loadedVideo.isFollowing}
             onFollow={handleFollow}
           />
 
           <VideoActions
-            likes={video.likes}
-            dislikes={video.dislikes}
-            bookmarks={video.bookmarks}
-            shares={video.shares}
-            liked={video.liked}
-            disliked={video.disliked}
-            bookmarked={video.bookmarked}
+            likes={loadedVideo.likes}
+            dislikes={loadedVideo.dislikes}
+            bookmarks={loadedVideo.bookmarks}
+            shares={loadedVideo.shares}
+            liked={loadedVideo.liked}
+            disliked={loadedVideo.disliked}
+            bookmarked={loadedVideo.bookmarked}
             onLike={handleLike}
             onDislike={handleDislike}
             onBookmark={handleBookmark}
@@ -419,25 +421,25 @@ export default function WatchVideoPage() {
 
 
           <DescriptionCard
-            description={video.description}
+            description={loadedVideo.description}
           />
 
-          {video.chapters &&
-            video.chapters.length > 0 && (
+          {loadedVideo.chapters &&
+            loadedVideo.chapters.length > 0 && (
               <ChapterList
-                chapters={video.chapters}
+                chapters={loadedVideo.chapters}
               />
             )}
 
           <CommentSection
-            contentId={video._id}
+            contentId={loadedVideo._id}
           />
 
           <ShareModal
             isOpen={isShareModalOpen}
             onClose={() => setIsShareModalOpen(false)}
             url={window.location.href}
-            title={video.title}
+            title={loadedVideo.title}
             embedType="video"
           />
 

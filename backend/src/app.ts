@@ -10,27 +10,8 @@ import adminRoutes from "./routes/admin.routes";
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  process.env.FRONTEND_URL,
-  process.env.FRONTEND_URL?.replace(/\/$/, ""),
-].filter(Boolean) as string[];
-
 app.use(cors({
-  origin: (origin, callback) => {
-    // allow requests with no origin (e.g. mobile apps, curl) or allowed origins
-    if (
-      !origin ||
-      allowedOrigins.includes(origin) ||
-      allowedOrigins.includes(origin.replace(/\/$/, "")) ||
-      origin.endsWith(".vercel.app")
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked: ${origin}`));
-    }
-  },
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());

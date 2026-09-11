@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
@@ -297,6 +297,16 @@ export default function WatchVideoPage() {
       <DashboardLayout>
         <div className="loading-page">
           Loading...
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!video) {
+    return (
+      <DashboardLayout>
+        <div className="loading-page">
+          Unable to load this content.
         </div>
       </DashboardLayout>
     );

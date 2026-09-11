@@ -312,7 +312,8 @@ export default function WatchVideoPage() {
     );
   }
 
-  const loadedVideo = video as Content;
+  // video is guaranteed non-null here — both null checks above return early
+  const loadedVideo = video!;
 
   return (
     <DashboardLayout>

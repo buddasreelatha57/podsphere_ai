@@ -101,7 +101,6 @@ export default function Landing() {
             <ul>
               <li>Unlimited Uploads</li>
               <li>Advanced AI processing</li>
-              <li>Priority Support</li>
             </ul>
           </div>
         </div>

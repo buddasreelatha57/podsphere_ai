@@ -33,3 +33,25 @@
     white-space:pre-wrap;
 
 }
+
+.description-text:not(.expanded){
+    max-height: 11.4em;
+    overflow: hidden;
+    position: relative;
+}
+
+.description-toggle{
+    margin-top:12px;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:#5eead4;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.description-toggle:hover{
+    color:#99f6e4;
+    text-decoration:underline;
+}

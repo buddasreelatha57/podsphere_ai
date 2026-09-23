@@ -94,7 +94,7 @@ const processAIInBackground = async (
       translated = await translate(transcript, "Hindi");
 
       if (publishArticle) {
-        article = await generateArticle(title, transcript, summary, category);
+        article = await generateArticle(title, transcript, summary, category, publishPodcast);
         seo = await generateSEO(article);
       }
     } catch (aiError) {

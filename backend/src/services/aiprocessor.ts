@@ -24,7 +24,7 @@ export async function processAI(contentId: string) {
         const summary = await generateSummary(transcript);
         let article = "";
         if (content.publishArticle) {
-            article = await generateArticle(content.title, transcript, summary, content.category);
+            article = await generateArticle(content.title, transcript, summary, content.category, content.publishPodcast);
         }
         const chapters = await generateChapters(transcript);
         const translated = await translate(transcript, "Hindi");

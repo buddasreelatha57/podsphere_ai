@@ -32,7 +32,7 @@ export default function Profile() {
     try {
       setLoading(true);
       setError(false);
-      const res = await api.get("/user/profile/me");
+      const res = await api.get("/users/profile/me");
       setProfile(res.data.profile);
       setContent(res.data.content);
 
@@ -72,6 +72,9 @@ export default function Profile() {
       }
 
       setProfile((currentProfile: Record<string, unknown>) => ({ ...currentProfile, ...updatedUser }));
+      const storage = sessionStorage.getItem("user") ? sessionStorage : localStorage;
+      const storedUser = JSON.parse(storage.getItem("user") || "{}");
+      storage.setItem("user", JSON.stringify({ ...storedUser, ...updatedUser }));
       setAvatarFile(null);
       setBannerFile(null);
       setShowModal(false);

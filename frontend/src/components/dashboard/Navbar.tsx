@@ -1,8 +1,9 @@
-import { Bell, Search, Mic, Check } from "lucide-react";
+import { Bell, Search, Mic, Check, Menu } from "lucide-react";
 import { toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNotifications, markNotificationAsRead, markAllNotificationsAsRead } from "../../services/notification.service";
+import api from "../../services/api";
 
 import "./Navbar.css";
 
@@ -24,7 +25,11 @@ type SpeechRecognitionInstance = {
 
 type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
 
-export default function Navbar() {
+interface NavbarProps {
+  onMenuClick: () => void;
+}
+
+export default function Navbar({ onMenuClick }: NavbarProps) {
   const [term, setTerm] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -39,7 +44,9 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const userData = sessionStorage.getItem("user") || localStorage.getItem("user");
+    const storage = sessionStorage.getItem("user") ? sessionStorage : localStorage;
+    const userData = storage.getItem("user");
+
     if (userData) {
       try {
         setUser(JSON.parse(userData));
@@ -47,6 +54,25 @@ export default function Navbar() {
         console.error("Failed to parse user data", e);
       }
     }
+
+    const refreshUser = async () => {
+      try {
+        const response = await api.get("/users/profile/me");
+        const profile = response.data?.profile;
+
+        if (!profile) return;
+
+        setUser((currentUser: any) => {
+          const updatedUser = { ...(currentUser || {}), ...profile };
+          storage.setItem("user", JSON.stringify(updatedUser));
+          return updatedUser;
+        });
+      } catch (error) {
+        console.error("Failed to refresh navbar profile", error);
+      }
+    };
+
+    if (userData) refreshUser();
   }, []);
   const avatar = user?.avatar || user?.photoURL || "/avatar.png";
 
@@ -134,6 +160,10 @@ export default function Navbar() {
 
   return (
     <header className="dashboard-navbar">
+
+      <button className="mobile-menu-btn" onClick={onMenuClick} aria-label="Open sidebar">
+        <Menu size={22} />
+      </button>
 
       <div className="search-box">
         {term === "" && <Search size={18} />}

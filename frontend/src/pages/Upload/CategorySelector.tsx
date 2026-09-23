@@ -19,6 +19,7 @@ const categories = [
   "Lifestyle",
   "Comedy",
   "Motivation",
+  "Story",
   "History",
   "Music",
   "Sports",

@@ -65,7 +65,8 @@ export const getCreatorProfile = async (req: Request, res: Response) => {
       userQuery = id;
     }
 
-    const user = await User.findById(userQuery).select("-password -settings -watchHistory");
+    const projection = id === "me" ? "-password -watchHistory" : "-password -settings -watchHistory";
+    const user = await User.findById(userQuery).select(projection);
     
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });

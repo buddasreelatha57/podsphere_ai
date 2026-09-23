@@ -16,6 +16,10 @@
 	z-index:200;
 }
 
+.mobile-menu-btn{
+    display:none;
+}
+
 /* When inside dashboard layout, offset navbar by sidebar width */
 .dashboard-layout .sidebar:not(.collapsed) ~ .main-content .dashboard-navbar,
 .dashboard .sidebar:not(.collapsed) ~ .dashboard-main .dashboard-navbar{
@@ -130,6 +134,27 @@ font-size:15px;
 }
 
 @media (max-width:768px){
+    .dashboard-navbar{
+        left:0;
+        width:100%;
+        padding:0 16px;
+        gap:10px;
+    }
+
+    .mobile-menu-btn{
+        display:flex;
+        flex:0 0 42px;
+        width:42px;
+        height:42px;
+        align-items:center;
+        justify-content:center;
+        border:0;
+        border-radius:10px;
+        background:#111827;
+        color:#fff;
+        cursor:pointer;
+    }
+
 	.search-box{
 		width:100%;
 		padding:10px 12px;

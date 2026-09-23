@@ -21,6 +21,10 @@
     z-index:150;
 }
 
+.sidebar-backdrop{
+    display:none;
+}
+
 .sidebar-logo{
     display:flex;
     align-items:center;
@@ -200,6 +204,15 @@
 ======================= */
 
 @media (max-width:768px){
+
+.sidebar-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    border:0;
+    background:rgba(0,0,0,.45);
+    z-index:149;
+}
 
 .sidebar{
 

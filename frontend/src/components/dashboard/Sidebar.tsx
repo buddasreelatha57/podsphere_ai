@@ -17,6 +17,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Sidebar.css";
 
+interface SidebarProps {
+  mobileOpen: boolean;
+  onMobileOpenChange: (open: boolean) => void;
+}
+
 const menus = [
   { name: "Home", icon: Home, path: "/dashboard" },
   { name: "Explore", icon: Compass, path: "/explore" },
@@ -31,24 +36,23 @@ const menus = [
 
 
 
-export default function Sidebar() {
+export default function Sidebar({ mobileOpen, onMobileOpenChange }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false); // desktop collapse
-  const [mobileOpen, setMobileOpen] = useState(false); // mobile overlay
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
-      if (window.innerWidth > 768) setMobileOpen(false);
+      if (window.innerWidth > 768) onMobileOpenChange(false);
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [onMobileOpenChange]);
 
   const handleToggle = () => {
-    if (isMobile) setMobileOpen((s) => !s);
+    if (isMobile) onMobileOpenChange(!mobileOpen);
     else setCollapsed((s) => !s);
   };
 
@@ -74,6 +78,7 @@ export default function Sidebar() {
 
   return (
     <>
+      {mobileOpen && <button className="sidebar-backdrop" aria-label="Close sidebar" onClick={() => onMobileOpenChange(false)} />}
       <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "open" : ""}`}>
 
         <div>
@@ -107,6 +112,7 @@ export default function Sidebar() {
                 className={({ isActive }) =>
                   isActive ? "menu-item active" : "menu-item"
                 }
+                onClick={() => onMobileOpenChange(false)}
               >
                 <item.icon size={20} />
 

@@ -49,9 +49,12 @@ overflow:auto;
 }
 
 @media (max-width:768px){
-	.dashboard .sidebar,
+	.dashboard .sidebar{
+		transform:translateX(-100%);
+	}
+
 	.dashboard .sidebar.open{
-		transform:none;
+		transform:translateX(0);
 	}
 
 	.dashboard .sidebar ~ .dashboard-main{

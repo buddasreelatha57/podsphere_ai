@@ -14,6 +14,7 @@ import { uploadContent } from "../../services/content.service";
 import "./CreateContent.css";
 
 export default function CreateContent() {
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   // ==========================
@@ -128,10 +129,10 @@ export default function CreateContent() {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar mobileOpen={mobileSidebarOpen} onMobileOpenChange={setMobileSidebarOpen} />
 
       <main className="main-content create-content-page">
-        <Navbar />
+        <Navbar onMenuClick={() => setMobileSidebarOpen((open) => !open)} />
 
         <div className="page-body">
           <div className="page-header">

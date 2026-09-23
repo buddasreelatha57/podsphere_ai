@@ -114,6 +114,8 @@ export default function Settings() {
     try {
       if (avatarFile || bannerFile) {
         const formData = new FormData();
+        formData.append("name", profile.name);
+        formData.append("bio", profile.bio || "");
         if (avatarFile) formData.append("avatar", avatarFile);
         if (bannerFile) formData.append("banner", bannerFile);
         await updateProfileImages(formData);
@@ -124,10 +126,17 @@ export default function Settings() {
         bio: profile.bio
       });
 
-      if (res.data?.success || res.success || res) {
+      if (res?.success || res?.data?.success || res) {
         toast.success("Profile updated successfully!");
-        const localUser = JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "{}");
-        const updatedLocalUser = { ...localUser, name: profile.name, bio: profile.bio };
+        const storedUser = JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "{}");
+        const updatedLocalUser = {
+          ...storedUser,
+          name: profile.name,
+          bio: profile.bio,
+          avatar: avatarPreview || storedUser.avatar || profile.avatar,
+          banner: bannerPreview || storedUser.banner || profile.banner,
+        };
+
         if (sessionStorage.getItem("user")) {
           sessionStorage.setItem("user", JSON.stringify(updatedLocalUser));
         } else {
@@ -135,7 +144,8 @@ export default function Settings() {
         }
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to update profile.");
+      const message = err?.response?.data?.message || err?.message || "Failed to update profile.";
+      toast.error(message.includes("Network Error") ? "Network error while saving profile. Please check your internet connection and try again." : message);
     } finally {
       setSaving(false);
     }

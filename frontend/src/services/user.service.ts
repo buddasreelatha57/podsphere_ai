@@ -8,12 +8,12 @@ export const getHistory = async () => {
 
 // Profile
 export const updateProfile = async (data: any) => {
-  const response = await api.put("/user/profile", data);
+  const response = await api.put("/users/profile", data);
   return response.data;
 };
 
 export const updateProfileImages = async (formData: FormData) => {
-  const response = await api.put("/user/profile/upload", formData, {
+  const response = await api.put("/users/profile/upload", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
@@ -21,12 +21,12 @@ export const updateProfileImages = async (formData: FormData) => {
 
 // Settings
 export const updateSettings = async (settings: any) => {
-  const response = await api.put("/user/settings", { settings });
+  const response = await api.put("/users/settings", { settings });
   return response.data;
 };
 
 // Follow
 export const toggleFollowUser = async (userId: string) => {
-  const response = await api.post(`/user/${userId}/follow`);
+  const response = await api.post(`/users/follow/${userId}`);
   return response.data;
 };

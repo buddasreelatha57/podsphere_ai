@@ -1,3 +1,39 @@
+.my-podcast-description{
+    margin-top:8px;
+    color:#94A3B8;
+    font-size:14px;
+}
+
+.my-podcast-description p{
+    margin:0;
+    line-height:1.55;
+    white-space:pre-wrap;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3;
+    overflow:hidden;
+}
+
+.my-podcast-description.expanded p{
+    display:block;
+    -webkit-line-clamp:unset;
+}
+
+.my-podcast-description button{
+    margin-top:5px;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:#5eead4;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.my-podcast-description button:hover{
+    color:#99f6e4;
+    text-decoration:underline;
+}
 .dashboard-page{
     color:white;
 }

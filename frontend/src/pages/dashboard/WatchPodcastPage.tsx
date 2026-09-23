@@ -10,6 +10,7 @@ import RelatedPodcastCard from "../../components/dashboard/RelatedPodcastCard";
 import PodcastPlayer from "../../components/podcast/PodcastPlayer";
 import PodcastActions from "../../components/podcast/PodcastActions";
 import ShareModal from "../../components/common/ShareModal";
+import DescriptionCard from "../../components/video/DescriptionCard";
 
 import "./WatchPodcastPage.css";
 
@@ -29,6 +30,7 @@ interface Content {
   creator: Creator;
 
   category: string;
+    description: string;
 
   bookmarks: number;
 
@@ -228,6 +230,8 @@ const handleDownload=()=>{
                     onDownload={handleDownload}
 
                 />
+
+                <DescriptionCard description={podcast.description} />
 
                 <div className="queue-card">
 

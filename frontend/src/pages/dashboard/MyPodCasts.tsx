@@ -22,6 +22,31 @@ interface Content {
   };
 }
 
+function ExpandableDescription({ description }: { description: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasMore = description.length > 180;
+
+  if (!description) return null;
+
+  return (
+    <div className={`my-podcast-description ${expanded ? "expanded" : ""}`}>
+      <p>{description}</p>
+      {hasMore && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            setExpanded((isExpanded) => !isExpanded);
+          }}
+          aria-expanded={expanded}
+        >
+          {expanded ? "Show less" : "Show more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function MyPodCasts() {
   const navigate = useNavigate();
 
@@ -179,9 +204,7 @@ export default function MyPodCasts() {
                   <div className="video-info">
                     <h3>{video.title}</h3>
                     <p>{video.creator?.name || "You"}</p>
-                    <p style={{ color: "#94A3B8", marginTop: 8, fontSize: 14 }}>
-                      {video.description}
-                    </p>
+                    <ExpandableDescription description={video.description} />
                     <div className="video-footer">
                       <span>{new Date(video.createdAt).toLocaleDateString()}</span>
                       <span className={video.status === "completed" || video.status === "published" ? "status published" : video.status === "draft" ? "status draft" : "status processing"}>

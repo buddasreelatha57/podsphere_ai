@@ -72,7 +72,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
       }
     };
 
-    if (userData) refreshUser();
+    if (sessionStorage.getItem("token") || localStorage.getItem("token")) refreshUser();
   }, []);
   const avatar = user?.avatar || user?.photoURL || "/avatar.png";
 
@@ -232,7 +232,14 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
         </div>
 
         <div className="profile-box" onClick={() => navigate("/profile")}> 
-          <img className="profile-avatar" src={avatar} alt="Profile" />
+          <img
+            className="profile-avatar"
+            src={avatar}
+            alt="Profile"
+            onError={(event) => {
+              event.currentTarget.src = "/avatar.png";
+            }}
+          />
           <div>
             <h4>{user?.name ?? "Sree"}</h4>
             <span>{user?.role ?? "Creator"}</span>

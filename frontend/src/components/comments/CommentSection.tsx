@@ -132,15 +132,23 @@ export default function CommentSection({ contentId }: Props) {
           {comments.map((comment) => {
             const isOwner = currentUser && comment.user?._id === currentUser._id;
             const isEditing = editingCommentId === comment._id;
+            const timestamp = comment.createdAt ? new Date(comment.createdAt).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }) : "Recently";
 
             return (
-              <article key={comment._id} className="comment-card">
+              <article key={comment._id} className={`comment-card ${isOwner ? "owner-comment" : ""}`}>
                 <div className="comment-avatar">{comment.user?.name?.charAt(0)?.toUpperCase() || "U"}</div>
 
                 <div className="comment-body">
                   <div className="comment-meta">
-                    <h4>{comment.user?.name || "Unknown user"}</h4>
-                    <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                    <div className="comment-author-wrap">
+                      <h4>{comment.user?.name || "Unknown user"}</h4>
+                      <span className="comment-timestamp">{timestamp}</span>
+                    </div>
+                    {isOwner && <span className="comment-owner-badge">You</span>}
                   </div>
 
                   {isEditing ? (
@@ -174,7 +182,7 @@ export default function CommentSection({ contentId }: Props) {
                         <>
                           <button
                             type="button"
-                            className="comment-action ghost"
+                            className="comment-action secondary"
                             onClick={() => {
                               setEditingCommentId(comment._id);
                               setEditMessage(comment.message);

@@ -239,44 +239,44 @@ export const updateProfileImages = async (req: Request, res: Response) => {
     if ((req as any).user?.role === "guest") {
       return res.status(403).json({ success: false, message: "Guest users cannot update profile" });
     }
+
     const userId = (req as any).user.id;
     const { name, bio } = req.body;
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
-    // Handle text fields
     if (name) user.name = name;
     if (bio !== undefined) user.bio = bio;
 
-    const activeConfig = await getActiveCloudinaryConfig();
+    const uploadedFiles = [...(files?.avatar || []), ...(files?.banner || [])];
 
-    if (files?.avatar?.length) {
-      const avatarFile = files.avatar[0];
-      const result = await cloudinary.uploader.upload(avatarFile.path, {
-        ...activeConfig,
-        folder: "podsphere/users",
-        resource_type: "image"
-      });
-      user.avatar = result.secure_url;
-    }
+    if (uploadedFiles.length > 0) {
+      const activeConfig = await getActiveCloudinaryConfig();
 
-    if (files?.banner?.length) {
-      const bannerFile = files.banner[0];
-      const result = await cloudinary.uploader.upload(bannerFile.path, {
-        ...activeConfig,
-        folder: "podsphere/users",
-        resource_type: "image"
-      });
-      user.banner = result.secure_url;
+      for (const file of uploadedFiles) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          ...activeConfig,
+          folder: "podsphere/users",
+          resource_type: "image",
+        });
+
+        if (file.fieldname === "avatar") {
+          user.avatar = result.secure_url;
+        }
+        if (file.fieldname === "banner") {
+          user.banner = result.secure_url;
+        }
+      }
     }
 
     await user.save();
 
     res.json({ success: true, user });
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error updating profile images:", err);
-    res.status(500).json({ success: false, message: "Failed to update profile images" });
+    const message = err?.message || "Failed to update profile images";
+    res.status(500).json({ success: false, message });
   } finally {
     for (const file of [...(files?.avatar || []), ...(files?.banner || [])]) {
       try {
